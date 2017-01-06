@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_home"
+        android:enabled="true"
+        android:icon="@drawable/ic_home_white_24dp"
+        android:title="@string/toolbar_home"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_stats"
+        android:enabled="true"
+        android:icon="@drawable/ic_poll_white_24dp"
+        android:title="@string/toolbar_stats"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_myfanta"
+        android:enabled="true"
+        android:icon="@drawable/ic_football"
+        android:title="@string/toolbar_mylineups"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_notifications"
+        android:enabled="true"
+        android:icon="@drawable/ic_notifications_white_24dp"
+        android:title="@string/toolbar_notifications"
+        app:showAsAction="ifRoom" />
+</menu>

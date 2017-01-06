@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "941165187916",
+    "firebase_url": "https://ppformazioni.firebaseio.com",
+    "project_id": "ppformazioni",
+    "storage_bucket": "ppformazioni.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:941165187916:android:f3c80b6e3176967a",
+        "android_client_info": {
+          "package_name": "matteobrienza.ppformazioni"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "941165187916-djtju49gf20ki59j55kfrplgv67m33kf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "matteobrienza.ppformazioni",
+            "certificate_hash": "A19BFE6DEA504DC36BABF2810A3C0E366F0BBCED"
+          }
+        },
+        {
+          "client_id": "941165187916-9u3qakpg5n18b4dh93f8oi6v8ulfkldb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9GqeNXdNwVi591tgQxbirBCjK6ARqcvc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "941165187916-9u3qakpg5n18b4dh93f8oi6v8ulfkldb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

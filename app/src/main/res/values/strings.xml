@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">PPFormazioni</string>
+
+    <string name="toolbar_home">Home</string>
+    <string name="toolbar_stats">League Table</string>
+    <string name="toolbar_mylineups">My Lineups</string>
+    <string name="toolbar_notifications">Notifications</string>
+
+    <string name="home_match_coach">Coach</string>
+    <string name="home_match_subs">Substitutions:</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="no_notifications">There is not notifications.</string>
+
+    <string name="points">PT</string>
+    <string name="games">G</string>
+    <string name="wins">W</string>
+    <string name="draws">D</string>
+    <string name="losts">L</string>
+
+
+    <string name="Profile">Profile</string>
+    <string name="Settings">Settings</string>
+    <string name="Logout">Logout</string>
+
+    <string name="no_lineups">Add your fantasy football lineups!</string>
+</resources>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp">
+
+    <Button
+        android:id="@+id/newspaper"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Corriere dello sport"
+        android:textColor="#fff"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:background="@drawable/newspaper_shape_inactive"/>
+
+</LinearLayout>
