@@ -2,17 +2,22 @@ package matteobrienza.ppformazioni;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -20,6 +25,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -49,6 +55,7 @@ import matteobrienza.ppformazioni.adapters.NotificationsAdapter;
 import matteobrienza.ppformazioni.adapters.SearchPlayersAdapter;
 import matteobrienza.ppformazioni.models.Notification;
 import matteobrienza.ppformazioni.models.Player;
+import matteobrienza.ppformazioni.networking.CacheRequest;
 
 public class SearchPlayersActivity extends AppCompatActivity {
 
@@ -63,6 +70,7 @@ public class SearchPlayersActivity extends AppCompatActivity {
     private EditText SearchText;
     private ImageView SearchButton;
     private Button SaveButton;
+    //private TextView SaveButton;
 
     private List<Player> players;
     private List<Player> playersToFilter;
@@ -75,21 +83,29 @@ public class SearchPlayersActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_search_players);
 
+        final Context context = this;
+
         if(Build.VERSION.SDK_INT >= 21) {
             dialog = new ProgressDialog(this,android.R.style.Theme_Material_Light_NoActionBar_Fullscreen);
-        }else  dialog = new ProgressDialog(this,android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+        }else  dialog = new ProgressDialog(this,android.R.style.Theme_DeviceDefault_NoActionBar_Fullscreen);
 
         SearchText = (EditText) findViewById(R.id.search_player_name);
-        SearchText.setOnKeyListener(new View.OnKeyListener() {
+        SearchText.addTextChangedListener(new TextWatcher() {
+
             @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
+            public void afterTextChanged(Editable s) {}
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start,int before, int count) {
                 SearchPlayers_adapter.applyFilter(SearchText.getText().toString());
-                return false;
             }
         });
         SearchButton = (ImageView) findViewById(R.id.search_button);
         SaveButton = (Button) findViewById(R.id.search_button_save);
-
+        //SaveButton = (TextView) findViewById(R.id.search_button_save);
         SaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,7 +124,6 @@ public class SearchPlayersActivity extends AppCompatActivity {
 
                 dialog.show();
                 dialog.setCancelable(false);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                 dialog.setContentView(R.layout.dialog_progress);
 
                 RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
@@ -125,6 +140,8 @@ public class SearchPlayersActivity extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         Log.e("VOLLEY", error.toString());
                         dialog.dismiss();
+                        Intent intent = new Intent("user-lineups-update");
+                        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                         SearchPlayersActivity.this.finish();
                     }
                 }) {

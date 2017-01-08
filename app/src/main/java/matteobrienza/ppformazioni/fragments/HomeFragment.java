@@ -1,6 +1,7 @@
 package matteobrienza.ppformazioni.fragments;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.provider.SyncStateContract;
@@ -14,10 +15,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -25,6 +28,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -34,6 +38,7 @@ import matteobrienza.ppformazioni.adapters.MatchesAdapter;
 import matteobrienza.ppformazioni.models.Match;
 import matteobrienza.ppformazioni.models.Player;
 import matteobrienza.ppformazioni.models.TeamStats;
+import matteobrienza.ppformazioni.networking.CacheRequest;
 
 
 public class HomeFragment extends Fragment {
@@ -84,52 +89,59 @@ public class HomeFragment extends Fragment {
     public void GetMatches(String URL, Context context){
 
         RequestQueue queue = Volley.newRequestQueue(context);
-        JsonArrayRequest jsObjRequest = new JsonArrayRequest
-                (Request.Method.GET, URL, null, new Response.Listener<JSONArray>() {
+        CacheRequest jsObjRequest = new CacheRequest( "", 0, URL, new Response.Listener<NetworkResponse>() {
+            @Override
+            public void onResponse(NetworkResponse response) {
 
-                    @Override
-                    public void onResponse(JSONArray response) {
+                try {
+                    final String jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
 
-                        try {
-                            JSONObject jo = response.getJSONObject(0);
+                    JSONArray base = new JSONArray(jsonString);
 
-                            MatchList_adapter.setDay(getResources().getString(R.string.day) + " " + jo.getString("number"));
+                    JSONObject jo = base.getJSONObject(0);
 
-                            JSONArray matches = jo.getJSONArray("matches");
-
-                            for(int i = 0; i < matches.length(); i++){
-                                JSONObject match = matches.getJSONObject(i);
-                                JSONObject team_home = match.getJSONObject("homeTeam");
-                                JSONObject team_away = match.getJSONObject("awayTeam");
-                                Match m = new Match(
-                                        match.getInt("id"),
-                                        team_home.getInt("id"),
-                                        team_home.getString("name"),
-                                        team_home.getString("logo_URL"),
-                                        team_away.getInt("id"),
-                                        team_away.getString("name"),
-                                        team_away.getString("logo_URL"),
-                                        null,
-                                        null,
-                                        match.getString("matchDate")
-                                );
-                                Matches.add(m);
-                            }
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                        MatchList_adapter.notifyDataSetChanged();
+                    Activity activity = getActivity();
+                    if(activity != null){
+                        MatchList_adapter.setDay(activity.getResources().getString(R.string.day) + " " + jo.getString("number"));
                     }
-                }, new Response.ErrorListener() {
 
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        System.out.println(error);
+
+                    JSONArray matches = jo.getJSONArray("matches");
+
+                    for(int i = 0; i < matches.length(); i++){
+                        JSONObject match = matches.getJSONObject(i);
+                        JSONObject team_home = match.getJSONObject("homeTeam");
+                        JSONObject team_away = match.getJSONObject("awayTeam");
+                        Match m = new Match(
+                                match.getInt("id"),
+                                team_home.getInt("id"),
+                                team_home.getString("name"),
+                                team_home.getString("logo_URL"),
+                                team_away.getInt("id"),
+                                team_away.getString("name"),
+                                team_away.getString("logo_URL"),
+                                null,
+                                null,
+                                match.getString("matchDate")
+                        );
+                        Matches.add(m);
                     }
-                });
 
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+
+                MatchList_adapter.notifyDataSetChanged();
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println(error);
+            }
+        });
         queue.add(jsObjRequest);
     }
 

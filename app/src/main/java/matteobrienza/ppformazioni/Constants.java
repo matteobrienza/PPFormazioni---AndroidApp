@@ -6,8 +6,8 @@ package matteobrienza.ppformazioni;
 
 public class Constants {
 
-    public static String BASE_URL = "http://ppformazioni.azurewebsites.net/api";
-    //public static String BASE_URL = "http://localhost:8081/api";
+    //public static String BASE_URL = "http://ppformazioni.azurewebsites.net/api";
+    public static String BASE_URL = "http://localhost:8081/api";
     public static String USERS_URL = BASE_URL + "/users";
     public static String CHAMPIONSHIPS_URL = BASE_URL + "/championships/1";
     public static String STATS_URL = CHAMPIONSHIPS_URL + "/standings";

@@ -11,7 +11,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jakewharton.picasso.OkHttp3Downloader;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
 
 import java.util.List;
 
@@ -71,23 +74,50 @@ public class StatsAdapter extends RecyclerView.Adapter<StatsAdapter.StatViewHold
         holder.Team_draws.setText(stats.get(position).getMatchDraws());
         holder.Team_losts.setText(stats.get(position).getMatchLosts());
 
-        Picasso.Builder builder = new Picasso.Builder(context);
-        builder.listener(new Picasso.Listener()
-        {
-            @Override
-            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception)
-            {
-                exception.printStackTrace();
-            }
-        });
-        OkHttpClient client = new OkHttpClient();
-        builder.downloader(new OkHttp3Downloader(client));
+        downloadImage(holder.Team_avatar,stats.get(position).getTeamAvatar());
 
-        builder.build().load(stats.get(position).getTeamAvatar()).error(R.drawable.ic_football).into(holder.Team_avatar);
     }
 
     @Override
     public int getItemCount() {
         return stats.size();
+    }
+
+    public void downloadImage(final ImageView im, final String URL){
+
+        RequestCreator request = Picasso.with(im.getContext()).load(URL);
+
+        request.networkPolicy(NetworkPolicy.OFFLINE)
+                .error(R.drawable.ic_football)
+                .placeholder(R.drawable.circle)
+                .into(im, new Callback() {
+
+                    /*
+                    Picasso will keep looking for it offline in cache and fail,
+                    the following code looks at the local cache, if not found offline,
+                    it goes online and replenishes the cache
+                    */
+
+                    @Override
+                    public void onSuccess() {
+                    }
+
+                    @Override
+                    public void onError() {
+                        RequestCreator request2 = Picasso.with(im.getContext()).load(URL);
+
+                        request2.error(R.drawable.ic_football).placeholder(R.drawable.circle).into(im, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                            }
+
+                            @Override
+                            public void onError() {
+                            }
+                        });
+
+                    }
+                });
+
     }
 }

@@ -11,10 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -23,6 +25,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -30,7 +33,9 @@ import matteobrienza.ppformazioni.Constants;
 import matteobrienza.ppformazioni.R;
 import matteobrienza.ppformazioni.adapters.MatchesAdapter;
 import matteobrienza.ppformazioni.adapters.StatsAdapter;
+import matteobrienza.ppformazioni.models.Match;
 import matteobrienza.ppformazioni.models.TeamStats;
+import matteobrienza.ppformazioni.networking.CacheRequest;
 
 
 public class StatsFragment extends Fragment {
@@ -72,6 +77,56 @@ public class StatsFragment extends Fragment {
     public void GetStats(String URL, Context context){
 
         RequestQueue queue = Volley.newRequestQueue(context);
+        CacheRequest jsObjRequest = new CacheRequest( "", 0, URL, new Response.Listener<NetworkResponse>() {
+            @Override
+            public void onResponse(NetworkResponse response) {
+
+                try {
+                    final String jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+
+                    JSONArray base = new JSONArray(jsonString);
+
+                    for(int i = 0; i < base.length(); i++){
+
+                            JSONObject jo = base.getJSONObject(i);
+
+                            JSONObject team = jo.getJSONObject("team");
+                            JSONObject stats = jo.getJSONObject("stats");
+
+                            TeamStats ts = new TeamStats(
+                                    team.getInt("id"),
+                                    team.getString("name"),
+                                    team.getString("logo_URL"),
+                                    stats.getString("points"),
+                                    stats.getString("playedGames"),
+                                    stats.getString("wins"),
+                                    stats.getString("draws"),
+                                    stats.getString("losses")
+                            );
+
+                            Stats.add(ts);
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+
+
+                StatList_adapter.notifyDataSetChanged();
+                Stats_layout.setVisibility(View.VISIBLE);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println(error);
+            }
+        });
+        queue.add(jsObjRequest);
+
+        /*RequestQueue queue = Volley.newRequestQueue(context);
         JsonArrayRequest jsObjRequest = new JsonArrayRequest
                 (Request.Method.GET, URL, null, new Response.Listener<JSONArray>() {
 
@@ -115,7 +170,7 @@ public class StatsFragment extends Fragment {
                 });
 
         // Access the RequestQueue through your singleton class.
-        queue.add(jsObjRequest);
+        queue.add(jsObjRequest);*/
     }
 
 }

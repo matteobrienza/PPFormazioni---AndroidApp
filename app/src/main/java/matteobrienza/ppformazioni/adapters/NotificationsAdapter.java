@@ -94,7 +94,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
                 dialog.show();
                 dialog.setCancelable(false);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(context.getResources().getColor(R.color.traslucent)));
                 dialog.setContentView(R.layout.dialog_progress);
 
                 //NOTIFY THE DELETE TO THE SERVER

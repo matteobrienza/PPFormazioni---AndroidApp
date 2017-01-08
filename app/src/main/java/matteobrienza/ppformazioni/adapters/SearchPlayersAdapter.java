@@ -81,7 +81,6 @@ public class SearchPlayersAdapter extends RecyclerView.Adapter<SearchPlayersAdap
                 all_players.set(i,pToUpdate);
             }
         }
-        System.out.println("#########################################################" + all_players);
     }
 
     @Override
