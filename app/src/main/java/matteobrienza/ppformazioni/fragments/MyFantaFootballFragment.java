@@ -58,6 +58,8 @@ public class MyFantaFootballFragment extends Fragment {
 
     private List<Player> players;
 
+    static final int END_REQUEST = 1;  // The request code
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -70,7 +72,7 @@ public class MyFantaFootballFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getActivity(), SearchPlayersActivity.class);
-                startActivity(i);
+                startActivityForResult(i, END_REQUEST);;
             }
         });
 
@@ -122,15 +124,19 @@ public class MyFantaFootballFragment extends Fragment {
         return v;
     }
 
+
+
     @Override
-    public void onResume() {
-        Log.e("DEBUG", "onResume of HomeFragment");
-        super.onResume();
-        SharedPreferences state = PreferenceManager.getDefaultSharedPreferences(getContext());
-        GetPlayers(Constants.USERS_URL + "/" + state.getString("user_id", "1") + Constants.USERS_LINEUP_URL,getContext());
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == END_REQUEST) {
+            SharedPreferences state = PreferenceManager.getDefaultSharedPreferences(getContext());
+            GetPlayers(Constants.USERS_URL + "/" + state.getString("user_id", "1") + Constants.USERS_LINEUP_URL,getContext());
+        }
     }
 
     public void GetPlayers(String URL, Context context){
+
+        players.clear();
 
         RequestQueue queue = Volley.newRequestQueue(context);
         JsonArrayRequest jsObjRequest = new JsonArrayRequest
@@ -138,6 +144,8 @@ public class MyFantaFootballFragment extends Fragment {
 
                     @Override
                     public void onResponse(JSONArray response) {
+
+                        System.out.println(response.toString());
 
                         for(int i = 0; i < response.length(); i++){
                             try {
@@ -179,7 +187,6 @@ public class MyFantaFootballFragment extends Fragment {
         // Access the RequestQueue through your singleton class.
         queue.add(jsObjRequest);
     }
-
 
 
 }
