@@ -8,8 +8,10 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -67,6 +69,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
 
         notifyMainActivity();
+
+        final SharedPreferences state = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        state.edit().putBoolean("notifications",true).commit();
     }
 
     private void notifyMainActivity() {

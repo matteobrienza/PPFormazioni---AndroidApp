@@ -13,8 +13,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jakewharton.picasso.OkHttp3Downloader;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
 
 import java.util.List;
 
@@ -28,10 +31,14 @@ import okhttp3.OkHttpClient;
  * Created by Matteo on 03/01/2017.
  */
 
-public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.MatchViewHolder> {
+public class MatchesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<Match> matches;
+    private String day;
     private Context context;
+
+    private static final int HEADER_TYPE = 0;
+    private static final int MATCHES_TYPE = 1;
 
     public class MatchViewHolder extends RecyclerView.ViewHolder {
         public TextView MatchDate;
@@ -52,56 +59,115 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.MatchVie
         }
     }
 
-    public MatchesAdapter(List<Match> matches, Context context) {
+    public class HeaderViewHolder extends RecyclerView.ViewHolder {
+        public TextView Day;
+
+        public HeaderViewHolder(View v) {
+            super(v);
+            Day = (TextView)v.findViewById(R.id.day);
+        }
+    }
+
+    public MatchesAdapter(List<Match> matches, String day, Context context) {
+        this.day = day;
         this.matches = matches;
         this.context = context;
     }
 
-    @Override
-    public MatchViewHolder onCreateViewHolder(ViewGroup parent,int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_match_header, parent, false);
-        return new MatchViewHolder(v);
+    public void setDay(String day){
+        this.day = day;
     }
 
     @Override
-    public void onBindViewHolder(MatchViewHolder holder, int position) {
-        final Match match = matches.get(position);
-
-        holder.CardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, MatchDetailsActivity.class);
-                intent.putExtra("MATCH_ID", Integer.toString(match.getId()));
-                intent.putExtra("MATCH_HEADER", match.getHomeTeam_Name() + " - " + match.getAwayTeam_Name());
-                context.startActivity(intent);
-            }
-        });
-
-        holder.HomeTeam_Name.setText(match.getHomeTeam_Name());
-        holder.AwayTeam_Name.setText(match.getAwayTeam_Name());
-
-        holder.MatchDate.setText(match.getMatchDate());
-
-        Picasso.Builder builder = new Picasso.Builder(context);
-        builder.listener(new Picasso.Listener()
-        {
-            @Override
-            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception)
-            {
-                exception.printStackTrace();
-            }
-        });
-        OkHttpClient client = new OkHttpClient();
-        builder.downloader(new OkHttp3Downloader(client));
-
-        builder.build().load(match.getHomeTeam_Avatar()).error(R.drawable.ic_football).into(holder.HomeTeam_Avatar);
-        builder.build().load(match.getAwayTeam_Avatar()).error(R.drawable.ic_football).into(holder.AwayTeam_Avatar);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        switch (viewType) {
+            case HEADER_TYPE:
+                View v1 = LayoutInflater.from(parent.getContext()).inflate(R.layout.day_header, parent, false);
+                return new MatchesAdapter.HeaderViewHolder(v1);
+            case MATCHES_TYPE:
+            default:
+                View v2 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_match_header, parent, false);
+                return new MatchesAdapter.MatchViewHolder(v2);
+        }
+    }
 
 
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+
+        switch (getItemViewType(position)) {
+            case HEADER_TYPE:
+                HeaderViewHolder holder_header = (HeaderViewHolder)holder;
+                holder_header.Day.setText(day);
+                break;
+            case MATCHES_TYPE:
+                final Match match = matches.get(position);
+                MatchViewHolder holder_match = (MatchViewHolder)holder;
+                holder_match.CardView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(context, MatchDetailsActivity.class);
+                        intent.putExtra("MATCH_ID", Integer.toString(match.getId()));
+                        intent.putExtra("MATCH_HEADER", match.getHomeTeam_Name() + " - " + match.getAwayTeam_Name());
+                        context.startActivity(intent);
+                    }
+                });
+                holder_match.HomeTeam_Name.setText(match.getHomeTeam_Name());
+                holder_match.AwayTeam_Name.setText(match.getAwayTeam_Name());
+                holder_match.MatchDate.setText(match.getMatchDate());
+                downloadImage(holder_match.HomeTeam_Avatar, match.getHomeTeam_Avatar());
+                downloadImage(holder_match.AwayTeam_Avatar, match.getAwayTeam_Avatar());
+                break;
+        }
+
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return (position == 0) ? HEADER_TYPE : MATCHES_TYPE;
     }
 
     @Override
     public int getItemCount() {
         return matches.size();
+    }
+
+    public void downloadImage(final ImageView im, final String URL){
+
+        RequestCreator request = Picasso.with(im.getContext()).load(URL);
+
+        request.networkPolicy(NetworkPolicy.OFFLINE)
+                .error(R.drawable.ic_football)
+                .placeholder(R.drawable.circle)
+                .into(im, new Callback() {
+
+                    /*
+                    Picasso will keep looking for it offline in cache and fail,
+                    the following code looks at the local cache, if not found offline,
+                    it goes online and replenishes the cache
+                    */
+
+                    @Override
+                    public void onSuccess() {
+                    }
+
+                    @Override
+                    public void onError() {
+                        RequestCreator request2 = Picasso.with(im.getContext()).load(URL);
+
+                        request2.error(R.drawable.ic_football).placeholder(R.drawable.circle).into(im, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                            }
+
+                            @Override
+                            public void onError() {
+                            }
+                        });
+
+                    }
+                });
+
     }
 }

@@ -3,7 +3,7 @@
 
     <string name="toolbar_home">Home</string>
     <string name="toolbar_stats">League Table</string>
-    <string name="toolbar_mylineups">My Lineups</string>
+    <string name="toolbar_mylineups">My Lineup</string>
     <string name="toolbar_notifications">Notifications</string>
 
     <string name="home_match_coach">Coach</string>
@@ -25,5 +25,7 @@
     <string name="Settings">Settings</string>
     <string name="Logout">Logout</string>
 
-    <string name="no_lineups">Add your fantasy football lineups!</string>
+    <string name="no_lineups">Add your Fantasy Football players!</string>
+
+    <string name="day">DAY</string>
 </resources>

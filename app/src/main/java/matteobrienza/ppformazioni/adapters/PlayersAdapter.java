@@ -20,6 +20,7 @@ import matteobrienza.ppformazioni.PlayerDetailsActivity;
 import matteobrienza.ppformazioni.R;
 import matteobrienza.ppformazioni.models.Match;
 import matteobrienza.ppformazioni.models.MatchOtherInfo;
+import matteobrienza.ppformazioni.models.Newspaper;
 import matteobrienza.ppformazioni.models.Player;
 
 /**
@@ -33,11 +34,12 @@ public class PlayersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private List<Player> playersAway;
     private List<MatchOtherInfo> infosAway;
 
-
     private Context context;
 
     private static final int PLAYER_TYPE = 0;
     private static final int OTHERINFO_TYPE = 1;
+
+
 
     public class PlayerViewHolder extends RecyclerView.ViewHolder {
         public LinearLayout HomeTeam_Player;
@@ -73,17 +75,20 @@ public class PlayersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
-    public PlayersAdapter(List<Player> playersHome, List<Player> playersAway, List<MatchOtherInfo> infosHome, List<MatchOtherInfo> infosAway, Context context) {
+
+
+    public PlayersAdapter(List<Player> playersHome, List<Player> playersAway,List<MatchOtherInfo> infosHome, List<MatchOtherInfo> infosAway, Context context) {
         this.playersHome = playersHome;
         this.playersAway = playersAway;
         this.infosHome = infosHome;
         this.infosAway = infosAway;
         this.context = context;
+
     }
 
     @Override
     public int getItemViewType(int position) {
-        return (position < 11) ? PLAYER_TYPE : OTHERINFO_TYPE;
+        return (position<11) ? PLAYER_TYPE : OTHERINFO_TYPE;
     }
 
     @Override
@@ -140,6 +145,8 @@ public class PlayersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         }
     }
+
+
 
     @Override
     public int getItemCount() {

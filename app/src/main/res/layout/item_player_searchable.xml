@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_search_layout"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    android:paddingLeft="14dp"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/item_search_player_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Felipe Anderson"
+        android:textColor="@color/colorPrimary"
+        android:layout_weight="5"
+        android:textSize="18sp"/>
+
+    <CheckBox
+        android:id="@+id/item_search_player_state"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+</LinearLayout>

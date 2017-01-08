@@ -2,11 +2,9 @@ package matteobrienza.ppformazioni.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -47,8 +45,6 @@ import java.util.Map;
 
 import io.fabric.sdk.android.Fabric;
 import matteobrienza.ppformazioni.Constants;
-import matteobrienza.ppformazioni.LoginActivity;
-import matteobrienza.ppformazioni.MainActivity;
 import matteobrienza.ppformazioni.R;
 import matteobrienza.ppformazioni.networking.CustomRequest;
 
@@ -136,15 +132,6 @@ public class LoginFragment extends Fragment {
                                 editor_account_information.putString("phone_number", digitsClient.getString("phoneNumber"));
                                 editor_account_information.commit();
 
-
-                                /*Intent i = new Intent(getActivity(),MainActivity.class);
-                                i.putExtra("phone_number", digitsClient.getString("phoneNumber"));
-                                i.putExtra("user_name", digitsClient.getString("username"));
-                                i.putExtra("user_id", digitsClient.getString("id"));
-                                i.putExtra("auth_token", digitsClient.getString("authToken"));
-
-                                LoginActivity.this.finish();
-                                startActivity(i);*/
                                 FrameLayout fl = (FrameLayout)getActivity().findViewById(R.id.fragment_container_login);
                                 fl.setVisibility(View.GONE);
 

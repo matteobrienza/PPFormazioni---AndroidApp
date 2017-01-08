@@ -12,7 +12,8 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/no_lineups_image"
+            android:visibility="invisible"
+            android:id="@+id/no_lineup_image"
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:paddingBottom="35dp"
@@ -20,25 +21,35 @@
             android:layout_centerInParent="true"/>
 
         <TextView
+            android:visibility="invisible"
             android:layout_marginTop="-30dp"
-            android:id="@+id/no_notifications_text"
+            android:id="@+id/no_lineup_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/no_lineups_image"
+            android:layout_below="@id/no_lineup_image"
             android:textSize="18sp"
             android:text="@string/no_lineups"
             android:layout_centerInParent="true"/>
 
     </RelativeLayout>
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/myPlayers_rv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </android.support.v7.widget.RecyclerView>
+
 
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/mylineup_addPlayers"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
         android:layout_margin="16dp"
         android:src="@drawable/ic_add_white_24dp"
         app:elevation="6dp"
+        app:layout_anchor="@id/myPlayers_rv"
         app:layout_anchorGravity="bottom|right|end" />
 
 </android.support.design.widget.CoordinatorLayout>

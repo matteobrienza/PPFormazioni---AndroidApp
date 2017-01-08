@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -40,16 +41,15 @@ public class StatsFragment extends Fragment {
     private RecyclerView.Adapter StatList_adapter;
     private RecyclerView.LayoutManager StatList_layoutManager;
 
-    public StatsFragment() {
-        // Required empty public constructor
-    }
-
+    private FrameLayout Stats_layout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_stats, container, false);
+
+        Stats_layout = (FrameLayout)v.findViewById(R.id.stats_layout);
 
         Stats = new LinkedList<TeamStats>();
 
@@ -104,6 +104,7 @@ public class StatsFragment extends Fragment {
                         }
 
                         StatList_adapter.notifyDataSetChanged();
+                        Stats_layout.setVisibility(View.VISIBLE);
                     }
                 }, new Response.ErrorListener() {
 

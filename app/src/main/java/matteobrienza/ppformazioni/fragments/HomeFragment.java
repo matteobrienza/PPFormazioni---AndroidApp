@@ -39,10 +39,11 @@ import matteobrienza.ppformazioni.models.TeamStats;
 public class HomeFragment extends Fragment {
 
     private RecyclerView MatchList_rv;
-    private RecyclerView.Adapter MatchList_adapter;
+    private MatchesAdapter MatchList_adapter;
     private RecyclerView.LayoutManager MatchList_layoutManager;
 
     private List<Match> Matches;
+    private String Day;
 
 
     public HomeFragment() {
@@ -61,6 +62,7 @@ public class HomeFragment extends Fragment {
         bottomNavigationView.setVisibility(View.VISIBLE);
 
         Matches = new LinkedList<Match>();
+        Day = "";
 
         GetMatches(Constants.DAYS_URL, getContext());
 
@@ -72,7 +74,7 @@ public class HomeFragment extends Fragment {
 
         MatchList_rv.setLayoutManager(MatchList_layoutManager);
 
-        MatchList_adapter = new MatchesAdapter(Matches, container.getContext());
+        MatchList_adapter = new MatchesAdapter(Matches, Day, container.getContext());
 
         MatchList_rv.setAdapter(MatchList_adapter);
 
@@ -90,6 +92,8 @@ public class HomeFragment extends Fragment {
 
                         try {
                             JSONObject jo = response.getJSONObject(0);
+
+                            MatchList_adapter.setDay(getResources().getString(R.string.day) + " " + jo.getString("number"));
 
                             JSONArray matches = jo.getJSONArray("matches");
 

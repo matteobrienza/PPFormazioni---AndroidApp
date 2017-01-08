@@ -30,8 +30,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:padding="5dp"
-                    android:text="Sabato 7 Gennaio, ore 18:00"/>
+                    android:padding="5dp"/>
 
             </LinearLayout>
 
@@ -51,7 +50,6 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:gravity="center|right"
-                        android:text="LAZIO"
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="18sp"
                         android:paddingRight="10dp"
@@ -93,7 +91,6 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:gravity="center|left"
-                        android:text="ROMA"
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="18sp"
                         android:paddingRight="10dp"

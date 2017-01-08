@@ -2,10 +2,6 @@
 
     <group>
         <item
-            android:id="@+id/user_profile"
-            android:title="@string/Profile"
-            android:icon="@drawable/ic_account_circle_black_24dp"/>
-        <item
             android:id="@+id/settings"
             android:title="@string/Settings"
             android:icon="@drawable/ic_settings_black_24dp"/>

@@ -232,13 +232,15 @@ public class MatchDetailsActivity extends AppCompatActivity implements INewspape
 
                             Picasso.with(context).load(team_away.getString("logo_URL")).error(R.drawable.ic_football).into(AwayTeam_avatar);
 
-                            MatchDate.setText(match.getString("matchDate"));
+                            //MatchDate.setText(match.getString("matchDate"));
 
                             JSONArray players = match.getJSONArray("players");
 
                             String substitutionsHome = "";
 
                             String substitutionsAway = "";
+
+                            System.out.println(players);
 
                             for(int i = 0; i < players.length(); i++){
 

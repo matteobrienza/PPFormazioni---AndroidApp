@@ -3,7 +3,7 @@
     <string name="app_name">PPFormazioni</string>
     <string name="toolbar_home">Home</string>
     <string name="toolbar_stats">Classifica</string>
-    <string name="toolbar_mylineups">Le Mie Formazioni</string>
+    <string name="toolbar_mylineups">La Mia Formazione</string>
     <string name="toolbar_notifications">Notifiche</string>
 
     <string name="home_match_coach">Allenatore</string>
@@ -21,6 +21,8 @@
     <string name="Settings">Impostazioni</string>
     <string name="Logout">Logout</string>
 
-    <string name="no_lineups">Aggiungi le tue formazioni del Fantacalcio!</string>
+    <string name="no_lineups">Aggiungi i tuoi giocatori del Fantacalcio!</string>
+
+    <string name="day">GIORNATA</string>
 
 </resources>

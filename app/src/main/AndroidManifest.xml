@@ -10,35 +10,30 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity">
-        </activity>
-
         <activity android:name=".MatchDetailsActivity" />
         <activity android:name=".PlayerDetailsActivity" />
         <activity android:name=".InfoActivity" />
-        <activity android:name=".TeamDetailsActivity"></activity>
+        <activity android:name=".TeamDetailsActivity" />
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="83542be45fe846536111fce705ca7bd4dc2e38dd" />
 
-        <service
-            android:name=".FCM.MyFirebaseMessagingService">
+        <service android:name=".FCM.MyFirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
-        <service
-            android:name=".FCM.MyFirebaseInstanceIDService">
+        <service android:name=".FCM.MyFirebaseInstanceIDService">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 
@@ -49,8 +44,12 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
 
+        <activity android:name=".SettingsActivity" />
+        <activity android:name=".SearchPlayersActivity"></activity><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
     </application>
-
-
 
 </manifest>

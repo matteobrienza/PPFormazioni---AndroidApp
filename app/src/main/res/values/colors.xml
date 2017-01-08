@@ -9,5 +9,8 @@
     <color name="secondary_text">#757575</color>
     <color name="icons">#FFFFFF</color>
     <color name="divider">#BDBDBD</color>
+
+    <color name="circle_enabled">#00c853</color>
+    <color name="circle_disabled">#FF5252</color>
 </resources>
 
