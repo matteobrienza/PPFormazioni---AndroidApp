@@ -1,10 +1,13 @@
 package matteobrienza.ppformazioni.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by Matteo on 03/01/2017.
  */
 
-public class Player {
+public class Player implements Parcelable{
 
     private  int Id;
     private String Name;
@@ -39,6 +42,14 @@ public class Player {
         Name = n;
         Selected = selected;
     }
+
+    /*public Player(int i,String n, int cds, int gds, int ss){
+        Id = i;
+        Name = n;
+        Cds_Status = cds;
+        Gds_Status = gds;
+        Ss_Status = ss;
+    }*/
 
     public Player(String n, int cds, int gds, int ss){
         Name = n;
@@ -98,4 +109,47 @@ public class Player {
     public int getSs_Status() {
         return Ss_Status;
     }
+
+    @Override
+    public String toString() {
+        return Id + ", " + Name.substring(Name.lastIndexOf("\n") + 1) + " " + Number;
+    }
+
+    public Player(Parcel in) {
+        //Id = in.readInt();
+        Name = in.readString();
+        Cds_Status = in.readInt();
+        Gds_Status = in.readInt();
+        Ss_Status = in.readInt();
+    }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        //dest.writeInt(Id);
+        dest.writeString(Name);
+        dest.writeInt(Cds_Status);
+        dest.writeInt(Gds_Status);
+        dest.writeInt(Ss_Status);
+    }
+
+    public static final Parcelable.Creator<Player> CREATOR = new Parcelable.Creator<Player>()
+    {
+        @Override
+        public Player createFromParcel(Parcel in)
+        {
+            return new Player(in);
+        }
+
+        @Override
+        public Player[] newArray(int size)
+        {
+            return new Player[size];
+        }
+    };
 }

@@ -32,6 +32,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -72,6 +73,9 @@ public class MyFantaFootballFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getActivity(), SearchPlayersActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList("players", (ArrayList)players);
+                i.putExtras(bundle);
                 startActivityForResult(i, END_REQUEST);;
             }
         });
@@ -82,7 +86,7 @@ public class MyFantaFootballFragment extends Fragment {
         NoLineup_Image = (ImageView) v.findViewById(R.id.no_lineup_image);
         NoLineup_Message = (TextView) v.findViewById(R.id.no_lineup_text);
 
-        players = new LinkedList<Player>();
+        players = new ArrayList<>();
 
         Players_List.setHasFixedSize(true);
 

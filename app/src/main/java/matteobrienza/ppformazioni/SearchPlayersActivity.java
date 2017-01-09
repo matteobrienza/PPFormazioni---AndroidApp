@@ -48,6 +48,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -74,6 +75,7 @@ public class SearchPlayersActivity extends AppCompatActivity {
 
     private List<Player> players;
     private List<Player> playersToFilter;
+    private ArrayList<Player> alreadySelectedPlayers;
 
     public static ProgressDialog dialog;
 
@@ -82,6 +84,12 @@ public class SearchPlayersActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_search_players);
+
+        alreadySelectedPlayers = (ArrayList) getIntent().getExtras().getParcelableArrayList("players");
+        for (int i = 0; i < alreadySelectedPlayers.size(); i++){
+            Player player = alreadySelectedPlayers.get(i);
+            System.out.println(player);
+        }
 
         final Context context = this;
 
@@ -216,6 +224,8 @@ public class SearchPlayersActivity extends AppCompatActivity {
                                         false
                                 );
 
+                                if(isAlreadySelected(ts))ts.setSelected(true);
+
                                 players.add(ts);
                                 playersToFilter.add(ts);
 
@@ -237,6 +247,17 @@ public class SearchPlayersActivity extends AppCompatActivity {
 
         // Access the RequestQueue through your singleton class.
         queue.add(jsObjRequest);
+    }
+
+    public boolean isAlreadySelected(Player p){
+        for (int i = 0; i < alreadySelectedPlayers.size(); i++){
+            Player player = alreadySelectedPlayers.get(i);
+            String name = player.getName().substring(player.getName().lastIndexOf("\n") + 1);
+            if(name.equals(p.getName())){
+                return true;
+            }
+        }
+        return false;
     }
 
 }
