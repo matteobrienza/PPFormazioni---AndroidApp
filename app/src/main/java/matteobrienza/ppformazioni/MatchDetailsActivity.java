@@ -218,6 +218,7 @@ public class MatchDetailsActivity extends AppCompatActivity implements INewspape
                         try {
                             JSONObject match = response;
 
+                            System.out.println(match);
                             final JSONObject team_home = match.getJSONObject("homeTeam");
 
                             final JSONObject team_away = match.getJSONObject("awayTeam");
@@ -315,16 +316,19 @@ public class MatchDetailsActivity extends AppCompatActivity implements INewspape
 
                             }
 
-                            MatchOtherInfo msubs_home = new MatchOtherInfo("Substitutions", substitutionsHome.substring(0,substitutionsHome.lastIndexOf(",")));
-                            MatchOtherInfo coach_home = new MatchOtherInfo("Coach", team_home.getJSONObject("coach").getString("surname"));
-                            HomeInfos.add(coach_home);
-                            HomeInfos.add(msubs_home);
+                            if(substitutionsHome.length()>0){
+                                MatchOtherInfo msubs_home = new MatchOtherInfo("Substitutions", substitutionsHome.substring(0,substitutionsHome.lastIndexOf(",")));
+                                MatchOtherInfo coach_home = new MatchOtherInfo("Coach", team_home.getJSONObject("coach").getString("surname"));
+                                HomeInfos.add(coach_home);
+                                HomeInfos.add(msubs_home);
+                            }
 
-
-                            MatchOtherInfo msubs_away = new MatchOtherInfo("Substitutions", substitutionsAway.substring(0,substitutionsAway.lastIndexOf(",")));
-                            MatchOtherInfo coach_away = new MatchOtherInfo("Coach", team_away.getJSONObject("coach").getString("surname"));
-                            AwayInfos.add(coach_away);
-                            AwayInfos.add(msubs_away);
+                            if(substitutionsAway.length()>0){
+                                MatchOtherInfo msubs_away = new MatchOtherInfo("Substitutions", substitutionsAway.substring(0,substitutionsAway.lastIndexOf(",")));
+                                MatchOtherInfo coach_away = new MatchOtherInfo("Coach", team_away.getJSONObject("coach").getString("surname"));
+                                AwayInfos.add(coach_away);
+                                AwayInfos.add(msubs_away);
+                            }
 
 
                         } catch (JSONException e) {

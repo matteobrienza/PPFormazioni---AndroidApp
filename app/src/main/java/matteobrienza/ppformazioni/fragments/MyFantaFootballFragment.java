@@ -161,6 +161,7 @@ public class MyFantaFootballFragment extends Fragment {
             SharedPreferences state = PreferenceManager.getDefaultSharedPreferences(getContext());
             mySwipeRefreshLayout.setRefreshing(true);
             GetPlayers(Constants.USERS_URL + "/" + state.getString("user_id", "1") + Constants.USERS_LINEUP_URL,getContext());
+            Players_adapter.notifyDataSetChanged();
         }
     }
 

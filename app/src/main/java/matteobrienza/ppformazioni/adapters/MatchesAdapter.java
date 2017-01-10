@@ -102,7 +102,7 @@ public class MatchesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 holder_header.Day.setText(day);
                 break;
             case MATCHES_TYPE:
-                final Match match = matches.get(position);
+                final Match match = matches.get(position-1);
                 MatchViewHolder holder_match = (MatchViewHolder)holder;
                 holder_match.CardView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -130,7 +130,7 @@ public class MatchesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public int getItemCount() {
-        return matches.size();
+        return matches.size() + 1;
     }
 
     public void downloadImage(final ImageView im, final String URL){

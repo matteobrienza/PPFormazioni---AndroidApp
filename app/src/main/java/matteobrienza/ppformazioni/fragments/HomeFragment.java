@@ -181,6 +181,8 @@ public class HomeFragment extends Fragment {
                         Matches.add(m);
                     }
 
+                    System.out.println(Matches.size());
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                     mySwipeRefreshLayout.setRefreshing(false);
