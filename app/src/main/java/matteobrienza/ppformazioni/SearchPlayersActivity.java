@@ -11,7 +11,9 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,9 +24,12 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,6 +59,7 @@ import java.util.List;
 
 import matteobrienza.ppformazioni.adapters.NotificationsAdapter;
 import matteobrienza.ppformazioni.adapters.SearchPlayersAdapter;
+import matteobrienza.ppformazioni.listeners.HidingScrollListener;
 import matteobrienza.ppformazioni.models.Notification;
 import matteobrienza.ppformazioni.models.Player;
 import matteobrienza.ppformazioni.networking.CacheRequest;
@@ -77,6 +83,8 @@ public class SearchPlayersActivity extends AppCompatActivity {
     private List<Player> playersToFilter;
     private ArrayList<Player> alreadySelectedPlayers;
 
+    private SwipeRefreshLayout mySwipeRefreshLayout;
+
     public static ProgressDialog dialog;
 
     @Override
@@ -84,6 +92,7 @@ public class SearchPlayersActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_search_players);
+
 
         alreadySelectedPlayers = (ArrayList) getIntent().getExtras().getParcelableArrayList("players");
         for (int i = 0; i < alreadySelectedPlayers.size(); i++){
@@ -96,6 +105,19 @@ public class SearchPlayersActivity extends AppCompatActivity {
         if(Build.VERSION.SDK_INT >= 21) {
             dialog = new ProgressDialog(this,android.R.style.Theme_Material_Light_NoActionBar_Fullscreen);
         }else  dialog = new ProgressDialog(this,android.R.style.Theme_DeviceDefault_NoActionBar_Fullscreen);
+
+        mySwipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swiperefresh);
+        mySwipeRefreshLayout.setColorSchemeResources(R.color.refresh_progress_1,R.color.refresh_progress_2, R.color.refresh_progress_3, R.color.refresh_progress_4);
+        mySwipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        mySwipeRefreshLayout.setRefreshing(true);
+                        GetPlayers(Constants.PLAYERS_URL, context);
+                    }
+                }
+        );
+
 
         SearchText = (EditText) findViewById(R.id.search_player_name);
         SearchText.addTextChangedListener(new TextWatcher() {
@@ -132,6 +154,7 @@ public class SearchPlayersActivity extends AppCompatActivity {
 
                 dialog.show();
                 dialog.setCancelable(false);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(context.getResources().getColor(R.color.traslucent)));
                 dialog.setContentView(R.layout.dialog_progress);
 
                 RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
@@ -195,13 +218,20 @@ public class SearchPlayersActivity extends AppCompatActivity {
 
         SearchPlayers_layoutManager = new LinearLayoutManager(this);
 
+
         SearchPlayers_rv.setLayoutManager(SearchPlayers_layoutManager);
 
         SearchPlayers_adapter = new SearchPlayersAdapter(players, playersToFilter);
 
         SearchPlayers_rv.setAdapter(SearchPlayers_adapter);
 
-        GetPlayers(Constants.PLAYERS_URL, this);
+        mySwipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                mySwipeRefreshLayout.setRefreshing(true);
+                GetPlayers(Constants.PLAYERS_URL, context);
+            }
+        });
 
     }
 
@@ -234,6 +264,7 @@ public class SearchPlayersActivity extends AppCompatActivity {
                             }
                         }
 
+                        mySwipeRefreshLayout.setRefreshing(false);
                         SearchPlayers_adapter.notifyDataSetChanged();
 
                     }
@@ -241,6 +272,7 @@ public class SearchPlayersActivity extends AppCompatActivity {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        mySwipeRefreshLayout.setRefreshing(false);
                         System.out.println(error);
                     }
                 });

@@ -3,6 +3,7 @@ package matteobrienza.ppformazioni;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -67,6 +68,8 @@ public class MatchDetailsActivity extends AppCompatActivity implements INewspape
     private String MATCH_HEADER;
     private Context context;
 
+    private SwipeRefreshLayout mySwipeRefreshLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +89,18 @@ public class MatchDetailsActivity extends AppCompatActivity implements INewspape
 
         MATCH_ID = getIntent().getStringExtra("MATCH_ID");
         MATCH_HEADER = getIntent().getStringExtra("MATCH_HEADER");
+
+        mySwipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swiperefresh);
+        mySwipeRefreshLayout.setColorSchemeResources(R.color.refresh_progress_1,R.color.refresh_progress_2, R.color.refresh_progress_3, R.color.refresh_progress_4);
+        mySwipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        mySwipeRefreshLayout.setRefreshing(true);
+                        GetMatch(Constants.NEWSPAPERS_URL + "/1" + Constants.MATCH_URL + "/" + MATCH_ID, context);
+                    }
+                }
+        );
 
         //TOP TOOLBAR SETUP
         Toolbar_top = (Toolbar) findViewById(R.id.toolbar_top);
@@ -125,7 +140,14 @@ public class MatchDetailsActivity extends AppCompatActivity implements INewspape
 
         Players_rv.setLayoutManager(Players_layoutManager);
 
-        GetMatch(Constants.NEWSPAPERS_URL + "/1" + Constants.MATCH_URL + "/" + MATCH_ID, this);
+        mySwipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                mySwipeRefreshLayout.setRefreshing(true);
+                GetMatch(Constants.NEWSPAPERS_URL + "/1" + Constants.MATCH_URL + "/" + MATCH_ID, context);
+            }
+        });
+
 
     }
 
@@ -232,7 +254,7 @@ public class MatchDetailsActivity extends AppCompatActivity implements INewspape
 
                             Picasso.with(context).load(team_away.getString("logo_URL")).error(R.drawable.ic_football).into(AwayTeam_avatar);
 
-                            //MatchDate.setText(match.getString("matchDate"));
+                            MatchDate.setText(match.getString("matchDate"));
 
                             JSONArray players = match.getJSONArray("players");
 
@@ -309,6 +331,8 @@ public class MatchDetailsActivity extends AppCompatActivity implements INewspape
                             e.printStackTrace();
                         }
 
+                        mySwipeRefreshLayout.setRefreshing(false);
+
                         Players_adapter.notifyDataSetChanged();
 
                     }
@@ -316,6 +340,7 @@ public class MatchDetailsActivity extends AppCompatActivity implements INewspape
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        mySwipeRefreshLayout.setRefreshing(false);
                         System.out.println(error);
                     }
                 });
@@ -325,6 +350,7 @@ public class MatchDetailsActivity extends AppCompatActivity implements INewspape
 
     @Override
     public void onNewspaperItemClick(int newspaperId) {
+        mySwipeRefreshLayout.setRefreshing(true);
         GetMatch(Constants.NEWSPAPERS_URL + "/" + newspaperId + Constants.MATCH_URL + "/" + MATCH_ID, context);
     }
 }

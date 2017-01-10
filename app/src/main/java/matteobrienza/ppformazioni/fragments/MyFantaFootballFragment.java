@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -50,7 +51,7 @@ public class MyFantaFootballFragment extends Fragment {
 
     private FloatingActionButton AddPlayersButton;
     private RecyclerView Players_List;
-
+    private SwipeRefreshLayout mySwipeRefreshLayout;
     private RecyclerView.Adapter Players_adapter;
     private RecyclerView.LayoutManager Players_layoutManager;
 
@@ -60,13 +61,16 @@ public class MyFantaFootballFragment extends Fragment {
     private List<Player> players;
 
     static final int END_REQUEST = 1;  // The request code
+    private static final float BACKOFF_MULT = 1.0f;
+    private static final int TIMEOUT_MS = 10000;
+    private static final int MAX_RETRIES = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v =  inflater.inflate(R.layout.fragment_myfantafootball, container, false);
 
-        SharedPreferences state = PreferenceManager.getDefaultSharedPreferences(getContext());
+        final SharedPreferences state = PreferenceManager.getDefaultSharedPreferences(getContext());
 
         AddPlayersButton = (FloatingActionButton)v.findViewById(R.id.mylineup_addPlayers);
         AddPlayersButton.setOnClickListener(new View.OnClickListener() {
@@ -80,6 +84,18 @@ public class MyFantaFootballFragment extends Fragment {
             }
         });
 
+
+        mySwipeRefreshLayout = (SwipeRefreshLayout)v.findViewById(R.id.swiperefresh);
+        mySwipeRefreshLayout.setColorSchemeResources(R.color.refresh_progress_1,R.color.refresh_progress_2, R.color.refresh_progress_3, R.color.refresh_progress_4);
+        mySwipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        mySwipeRefreshLayout.setRefreshing(true);
+                        GetPlayers(Constants.USERS_URL + "/" + state.getString("user_id", "1") + Constants.USERS_LINEUP_URL,getContext());
+                    }
+                }
+        );
 
         Players_List = (RecyclerView)v.findViewById(R.id.myPlayers_rv);
 
@@ -122,7 +138,16 @@ public class MyFantaFootballFragment extends Fragment {
 
         Players_List.setAdapter(Players_adapter);
 
-        GetPlayers(Constants.USERS_URL + "/" + state.getString("user_id", "1") + Constants.USERS_LINEUP_URL,getContext());
+
+        mySwipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                mySwipeRefreshLayout.setRefreshing(true);
+                GetPlayers(Constants.USERS_URL + "/" + state.getString("user_id", "1") + Constants.USERS_LINEUP_URL,getContext());
+            }
+        });
+
+
 
 
         return v;
@@ -134,6 +159,7 @@ public class MyFantaFootballFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == END_REQUEST) {
             SharedPreferences state = PreferenceManager.getDefaultSharedPreferences(getContext());
+            mySwipeRefreshLayout.setRefreshing(true);
             GetPlayers(Constants.USERS_URL + "/" + state.getString("user_id", "1") + Constants.USERS_LINEUP_URL,getContext());
         }
     }
@@ -165,6 +191,7 @@ public class MyFantaFootballFragment extends Fragment {
                                 players.add(ts);
 
                             } catch (JSONException e) {
+                                mySwipeRefreshLayout.setRefreshing(false);
                                 e.printStackTrace();
                             }
                         }
@@ -174,16 +201,22 @@ public class MyFantaFootballFragment extends Fragment {
                             NoLineup_Message.setVisibility(View.VISIBLE);
                         }else
                         {
+                            NoLineup_Image.setVisibility(View.GONE);
+                            NoLineup_Message.setVisibility(View.GONE);
                             Players_adapter.notifyDataSetChanged();
                         }
+                        mySwipeRefreshLayout.setRefreshing(false);
 
                     }
                 }, new Response.ErrorListener() {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        mySwipeRefreshLayout.setRefreshing(false);
                         NoLineup_Image.setVisibility(View.VISIBLE);
                         NoLineup_Message.setVisibility(View.VISIBLE);
+                        players.clear();
+                        Players_adapter.notifyDataSetChanged();
                         System.out.println(error);
                     }
                 });

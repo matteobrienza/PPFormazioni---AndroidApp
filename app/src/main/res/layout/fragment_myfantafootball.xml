@@ -33,12 +33,20 @@
 
     </RelativeLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/myPlayers_rv"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swiperefresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </android.support.v7.widget.RecyclerView>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/myPlayers_rv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </android.support.v7.widget.RecyclerView>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
 
 
     <android.support.design.widget.FloatingActionButton
@@ -46,7 +54,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
-        android:layout_margin="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="72dp"
         android:src="@drawable/ic_add_white_24dp"
         app:elevation="6dp"
         app:layout_anchor="@id/myPlayers_rv"

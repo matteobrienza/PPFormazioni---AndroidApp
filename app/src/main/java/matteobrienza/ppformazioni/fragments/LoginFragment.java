@@ -1,5 +1,6 @@
 package matteobrienza.ppformazioni.fragments;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -46,6 +47,7 @@ import java.util.Map;
 import io.fabric.sdk.android.Fabric;
 import matteobrienza.ppformazioni.Constants;
 import matteobrienza.ppformazioni.R;
+import matteobrienza.ppformazioni.interfaces.ILoginSuccess;
 import matteobrienza.ppformazioni.networking.CustomRequest;
 
 public class LoginFragment extends Fragment {
@@ -55,11 +57,13 @@ public class LoginFragment extends Fragment {
 
     private static final float BACKOFF_MULT = 1.0f;
     private static final int TIMEOUT_MS = 10000;
-    private static final int MAX_RETRIES = 0;
+    private static final int MAX_RETRIES = 1;
 
     private Context context;
     public static SharedPreferences sp;
     public static ProgressDialog dialog;
+
+    ILoginSuccess mCallback;
 
 
     @Override
@@ -141,6 +145,8 @@ public class LoginFragment extends Fragment {
                                 fragmentTransaction.commit();
 
                                 Toast.makeText(getActivity(), "Authentication successful for " + phoneNumber, Toast.LENGTH_LONG).show();
+                                //NOTIFY MAIN ACTIVITY VIA INTERFACE
+                                mCallback.onLoginSuccess(digitsClient.getString("username"),digitsClient.getString("phoneNumber") );
                                 dialog.dismiss();
 
 
@@ -185,6 +191,23 @@ public class LoginFragment extends Fragment {
 
 
         return v;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        Activity activity;
+
+        if (context instanceof Activity){
+            activity=(Activity) context;
+            try {
+                mCallback = (ILoginSuccess) activity;
+            } catch (ClassCastException e) {
+                throw new ClassCastException(activity.toString()+ " must implement OnLoginSuccessListener");
+            }
+        }
+
     }
 
 }

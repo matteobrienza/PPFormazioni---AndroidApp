@@ -133,9 +133,14 @@ public class PlayersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             case OTHERINFO_TYPE:
                 System.out.println(position);
-                int offset = position-playersHome.size();
-                if(offset >= 0){
+                int offsetHome = position-playersHome.size();
+                int offsetAway = position-playersAway.size();
+
+                System.out.println(playersHome.size());
+                System.out.println(playersAway.size());
+                if(offsetHome >= 0 && offsetAway >=0 ){
                     OtherInfoViewHolder otherInfoViewHolder = (OtherInfoViewHolder)holder;
+                    System.out.println(position);
                     otherInfoViewHolder.HomeTeam_InfoType.setText(infosHome.get(position-playersHome.size()).InfoType);
                     otherInfoViewHolder.HomeTeam_InfoText.setText(infosHome.get(position-playersHome.size()).InfoText);
                     otherInfoViewHolder.AwayTeam_InfoType.setText(infosAway.get(position-playersAway.size()).InfoType);

@@ -16,5 +16,10 @@
 
     <color name="circle_enabled">#00c853</color>
     <color name="circle_disabled">#FF5252</color>
+
+    <color name="refresh_progress_1">#4183d7</color>
+    <color name="refresh_progress_2">#F44336</color>
+    <color name="refresh_progress_3">#3F51B5</color>
+    <color name="refresh_progress_4">#FF5722</color>
 </resources>
 

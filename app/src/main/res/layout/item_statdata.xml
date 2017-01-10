@@ -11,6 +11,7 @@
             android:layout_height="48dp">
 
             <LinearLayout
+                android:id="@+id/stats_team"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"

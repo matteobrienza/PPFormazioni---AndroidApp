@@ -51,6 +51,13 @@ public class Player implements Parcelable{
         Ss_Status = ss;
     }*/
 
+    public Player(int i, String n, String nb){
+        Id = i;
+        Name = n;
+        Number = nb;
+    }
+
+
     public Player(String n, int cds, int gds, int ss){
         Name = n;
         Cds_Status = cds;

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -50,6 +51,7 @@ public class NotificationFragment extends Fragment implements INotificationsAdap
 
     private ImageView NoNotification_Image;
     private TextView NoNotification_Message;
+    private SwipeRefreshLayout mySwipeRefreshLayout;
 
     private Activity mainActivity;
 
@@ -58,11 +60,24 @@ public class NotificationFragment extends Fragment implements INotificationsAdap
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        SharedPreferences state = PreferenceManager.getDefaultSharedPreferences(getContext());
+        final SharedPreferences state = PreferenceManager.getDefaultSharedPreferences(getContext());
 
         View v = inflater.inflate(R.layout.fragment_notification, container, false);
 
         mainActivity = getActivity();
+
+        mySwipeRefreshLayout = (SwipeRefreshLayout)v.findViewById(R.id.swiperefresh);
+        mySwipeRefreshLayout.setColorSchemeResources(R.color.refresh_progress_1,R.color.refresh_progress_2, R.color.refresh_progress_3, R.color.refresh_progress_4);
+        mySwipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        mySwipeRefreshLayout.setRefreshing(true);
+                        GetNotifications(Constants.USERS_URL + "/" + state.getString("user_id", "1") + Constants.NOTIFICATIONS_URL, getContext());
+                    }
+                }
+        );
+
 
         NoNotification_Image = (ImageView) v.findViewById(R.id.no_notifications_image);
         NoNotification_Message = (TextView) v.findViewById(R.id.no_notifications_text);
@@ -79,7 +94,14 @@ public class NotificationFragment extends Fragment implements INotificationsAdap
         Notifications_adapter = new NotificationsAdapter(Notifications, container.getContext(), this);
         Notifications_rv.setAdapter(Notifications_adapter);
 
-        GetNotifications(Constants.USERS_URL + "/" + state.getString("user_id", "1") + Constants.NOTIFICATIONS_URL, getContext());
+        mySwipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                mySwipeRefreshLayout.setRefreshing(true);
+                GetNotifications(Constants.USERS_URL + "/" + state.getString("user_id", "1") + Constants.NOTIFICATIONS_URL, getContext());
+            }
+        });
+
         return v;
 
 
@@ -93,6 +115,8 @@ public class NotificationFragment extends Fragment implements INotificationsAdap
 
                     @Override
                     public void onResponse(JSONArray response) {
+
+                        Notifications.clear();
 
                         for(int i = 0; i < response.length(); i++){
                             try {
@@ -109,6 +133,7 @@ public class NotificationFragment extends Fragment implements INotificationsAdap
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
+                                mySwipeRefreshLayout.setRefreshing(false);
                             }
                         }
 
@@ -117,9 +142,12 @@ public class NotificationFragment extends Fragment implements INotificationsAdap
                             NoNotification_Message.setVisibility(View.VISIBLE);
                         }else
                         {
+                            NoNotification_Image.setVisibility(View.GONE);
+                            NoNotification_Message.setVisibility(View.GONE);
                             Notifications_adapter.notifyDataSetChanged();
                         }
 
+                        mySwipeRefreshLayout.setRefreshing(false);
                     }
                 }, new Response.ErrorListener() {
 
@@ -127,11 +155,11 @@ public class NotificationFragment extends Fragment implements INotificationsAdap
                     public void onErrorResponse(VolleyError error) {
                         NoNotification_Image.setVisibility(View.VISIBLE);
                         NoNotification_Message.setVisibility(View.VISIBLE);
+                        mySwipeRefreshLayout.setRefreshing(false);
                         System.out.println(error);
                     }
                 });
 
-        // Access the RequestQueue through your singleton class.
         queue.add(jsObjRequest);
     }
 

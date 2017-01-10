@@ -3,6 +3,7 @@ package matteobrienza.ppformazioni;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -42,12 +43,17 @@ public class PlayerDetailsActivity extends AppCompatActivity {
     private TextView Player_MarketValue;
     private TextView Player_ContractUntil;
 
+    private Context context;
+    private SwipeRefreshLayout mySwipeRefreshLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player_details);
 
         PLAYER_ID  = getIntent().getIntExtra("PLAYER_ID",0);
+
+        context = this;
 
         //TOP TOOLBAR SETUP
         Toolbar_top = (Toolbar) findViewById(R.id.toolbar_top);
@@ -63,6 +69,18 @@ public class PlayerDetailsActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("");
 
 
+        mySwipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swiperefresh);
+        mySwipeRefreshLayout.setColorSchemeResources(R.color.refresh_progress_1,R.color.refresh_progress_2, R.color.refresh_progress_3, R.color.refresh_progress_4);
+        mySwipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        mySwipeRefreshLayout.setRefreshing(true);
+                        GetPlayer(Constants.PLAYERS_URL + "/" + PLAYER_ID, context);
+                    }
+                }
+        );
+
         Player_Avatar = (ImageView)findViewById(R.id.player_avatar);
         Player_Name = (TextView)findViewById(R.id.player_name);
         Player_Number = (TextView)findViewById(R.id.player_number);
@@ -72,7 +90,14 @@ public class PlayerDetailsActivity extends AppCompatActivity {
         Player_MarketValue = (TextView)findViewById(R.id.player_marketvalue);
         Player_ContractUntil = (TextView)findViewById(R.id.player_contractuntil);
 
-        GetPlayer(Constants.PLAYERS_URL + "/" + PLAYER_ID, this);
+        mySwipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                mySwipeRefreshLayout.setRefreshing(true);
+                GetPlayer(Constants.PLAYERS_URL + "/" + PLAYER_ID, context);
+            }
+        });
+
 
     }
 
@@ -101,11 +126,15 @@ public class PlayerDetailsActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
 
+                        mySwipeRefreshLayout.setRefreshing(false);
+                        Player_Avatar.setVisibility(View.VISIBLE);
+
                     }
                 }, new Response.ErrorListener() {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        mySwipeRefreshLayout.setRefreshing(false);
                         System.out.println(error);
                     }
                 });

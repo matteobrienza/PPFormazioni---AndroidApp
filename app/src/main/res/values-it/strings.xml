@@ -23,6 +23,8 @@
 
     <string name="no_lineups">Aggiungi i tuoi giocatori del Fantacalcio!</string>
 
+    <string name="players">Giocatori</string>
+
     <string name="day">GIORNATA</string>
 
 </resources>

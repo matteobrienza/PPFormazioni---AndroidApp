@@ -29,11 +29,21 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
 import com.digits.sdk.android.Digits;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterCore;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 
@@ -45,8 +55,10 @@ import matteobrienza.ppformazioni.fragments.LoginFragment;
 import matteobrienza.ppformazioni.fragments.MyFantaFootballFragment;
 import matteobrienza.ppformazioni.fragments.NotificationFragment;
 import matteobrienza.ppformazioni.fragments.StatsFragment;
+import matteobrienza.ppformazioni.interfaces.ILoginSuccess;
+import matteobrienza.ppformazioni.models.Notification;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ILoginSuccess {
 
     private Toolbar Toolbar_top;
     private ActionBarDrawerToggle mToggle;
@@ -144,10 +156,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         final SharedPreferences state = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         switch(item.getItemId()){
-            case R.id.settings:
-                Intent i = new Intent(this, SettingsActivity.class);
-                startActivity(i);
-                break;
             case R.id.logout:
                 state.edit().clear().commit();
                 clearApplicationData();
@@ -184,20 +192,39 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         navHeader_userName.setText(userName);
 
-        boolean isThereNotifications = state.getBoolean("notifications",false);
-
-        if(isThereNotifications){
-            Menu m = BottomNavigation.getMenu();
-            m.findItem(R.id.action_notifications).setIcon(R.drawable.ic_notifications_active_24dp);
-        }
+        //CHECK IF CAME FROM A NOTIFICATION CLICK
+        GetNotifications(Constants.USERS_URL + "/" + state.getString("user_id", "1") + Constants.NOTIFICATIONS_URL, this);
     }
 
+
+    public void GetNotifications(String URL, Context context){
+        RequestQueue queue = Volley.newRequestQueue(context);
+        JsonArrayRequest jsObjRequest = new JsonArrayRequest
+                (Request.Method.GET, URL, null, new Response.Listener<JSONArray>() {
+
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        if(response.length()>0){
+                            Menu m = BottomNavigation.getMenu();
+                            m.findItem(R.id.action_notifications).setIcon(R.drawable.ic_notifications_active_24dp);
+                        }
+                    }
+
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                });
+        queue.add(jsObjRequest);
+    }
 
     // handler for received Intents for the "lineups-update" event
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Toast.makeText(context, "Notification Received: lineups-updated!", Toast.LENGTH_LONG).show();
+            //Toast.makeText(context, "Notification Received: lineups-updated!", Toast.LENGTH_LONG).show();
             Menu m = BottomNavigation.getMenu();
             m.findItem(R.id.action_notifications).setIcon(R.drawable.ic_notifications_active_24dp);
         }
@@ -235,5 +262,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
         return dir.delete();
+    }
+
+    @Override
+    public void onLoginSuccess(String username, String phonenumber) {
+        View header = navView.getHeaderView(0);
+        TextView navHeader_phoneNumber = (TextView) header.findViewById(R.id.phone_number);
+        TextView navHeader_userName = (TextView) header.findViewById(R.id.name);
+        navHeader_userName.setText(username);
+        navHeader_phoneNumber.setText(phonenumber);
     }
 }

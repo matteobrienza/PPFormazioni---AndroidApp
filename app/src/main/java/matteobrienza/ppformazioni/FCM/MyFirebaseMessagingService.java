@@ -70,11 +70,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         notifyMainActivity();
 
-        final SharedPreferences state = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        state.edit().putBoolean("notifications",true).commit();
+
     }
 
     private void notifyMainActivity() {
+        /*final SharedPreferences state = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        state.edit().putBoolean("notifications",true).commit();*/
+
         Intent intent = new Intent("lineups-update");
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }

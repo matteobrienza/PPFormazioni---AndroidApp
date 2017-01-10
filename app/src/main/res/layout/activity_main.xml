@@ -38,8 +38,7 @@
             android:layout_marginTop="?attr/actionBarSize"
             android:id="@+id/fragment_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="@dimen/bottom_navigation_height"/>
+            android:layout_height="match_parent"/>
 
 
         <android.support.design.widget.BottomNavigationView

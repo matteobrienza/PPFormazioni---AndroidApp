@@ -1,6 +1,7 @@
 package matteobrienza.ppformazioni.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jakewharton.picasso.OkHttp3Downloader;
@@ -16,9 +18,12 @@ import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 
+import org.json.JSONException;
+
 import java.util.List;
 
 import matteobrienza.ppformazioni.R;
+import matteobrienza.ppformazioni.TeamDetailsActivity;
 import matteobrienza.ppformazioni.models.TeamStats;
 import okhttp3.OkHttpClient;
 
@@ -33,6 +38,7 @@ public class StatsAdapter extends RecyclerView.Adapter<StatsAdapter.StatViewHold
 
     public class StatViewHolder extends RecyclerView.ViewHolder {
 
+        private LinearLayout Team;
         private ImageView Team_avatar;
         private TextView Team_name;
         private TextView Team_points;
@@ -43,6 +49,7 @@ public class StatsAdapter extends RecyclerView.Adapter<StatsAdapter.StatViewHold
 
         public StatViewHolder(View v) {
             super(v);
+            Team = (LinearLayout)v.findViewById(R.id.stats_team);
             Team_avatar = (ImageView) v.findViewById(R.id.stats_team_avatar);
             Team_name = (TextView) v.findViewById(R.id.stats_team_name);
             Team_points = (TextView) v.findViewById(R.id.stats_team_points);
@@ -66,7 +73,16 @@ public class StatsAdapter extends RecyclerView.Adapter<StatsAdapter.StatViewHold
     }
 
     @Override
-    public void onBindViewHolder(StatViewHolder holder, int position) {
+    public void onBindViewHolder(StatViewHolder holder, final int position) {
+        holder.Team.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, TeamDetailsActivity.class);
+                intent.putExtra("TEAM_ID", stats.get(position).getTeamId());
+                context.startActivity(intent);
+            }
+        });
+
         holder.Team_name.setText(stats.get(position).getTeamName());
         holder.Team_games.setText(stats.get(position).getMatchGames());
         holder.Team_points.setText(stats.get(position).getPoints());

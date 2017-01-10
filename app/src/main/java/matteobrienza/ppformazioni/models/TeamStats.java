@@ -26,6 +26,9 @@ public class TeamStats {
         MatchLosts = ml;
     }
 
+    public int getTeamId() {
+        return TeamId;
+    }
 
     public String getTeamName() {
         return TeamName;

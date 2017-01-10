@@ -27,5 +27,7 @@
 
     <string name="no_lineups">Add your Fantasy Football players!</string>
 
+    <string name="players">Players</string>
+
     <string name="day">DAY</string>
 </resources>

@@ -36,16 +36,25 @@
             android:layout_weight="1"/>
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/search_players_list"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swiperefresh"
         android:layout_width="match_parent"
         android:layout_weight="8"
         android:layout_height="0dp">
 
-    </android.support.v7.widget.RecyclerView>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/search_players_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </android.support.v7.widget.RecyclerView>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <LinearLayout
+        android:id="@+id/save_button_layout"
         android:layout_width="match_parent"
+        android:layout_weight="0.1"
         android:layout_height="64dp"
         android:gravity="center|right"
         android:paddingRight="8dp">
