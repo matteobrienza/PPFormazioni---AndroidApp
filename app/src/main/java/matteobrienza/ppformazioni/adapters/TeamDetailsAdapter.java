@@ -108,7 +108,7 @@ public class TeamDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 TeamViewHolder teamViewHolder = (TeamViewHolder)holder;
                 downloadImage(teamViewHolder.Team_Avatar,team.getAvatar());
                 teamViewHolder.Team_Name.setText(team.getFullName());
-                teamViewHolder.Team_MarketValue.setText("Market Value: \n" +  team.getMarketValue());
+                teamViewHolder.Team_MarketValue.setText(context.getResources().getString(R.string.market_value) + "\n" +  team.getMarketValue());
                 break;
 
             case PLAYER_HEADER_TYPE:
