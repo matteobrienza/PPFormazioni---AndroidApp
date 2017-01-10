@@ -19,12 +19,21 @@
 
     <string name="Profile">Profilo</string>
     <string name="Settings">Impostazioni</string>
-    <string name="Logout">Logout</string>
+    <string name="Logout">Esci</string>
 
     <string name="no_lineups">Aggiungi i tuoi giocatori del Fantacalcio!</string>
 
     <string name="players">Giocatori</string>
 
     <string name="day">GIORNATA</string>
+
+    <string name="save">SALVA</string>
+
+    <string name="birthday">Data di Nascita: </string>
+    <string name="search_player">Cerca un giocatore…</string>
+    <string name="position">Ruolo: </string>
+    <string name="nationality">Nazionalità: </string>
+    <string name="market_value">Valore di Mercato: </string>
+    <string name="contract_until">Scadenza Contratto: </string>
 
 </resources>

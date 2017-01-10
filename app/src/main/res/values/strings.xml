@@ -9,7 +9,6 @@
     <string name="home_match_coach">Coach</string>
     <string name="home_match_subs">Substitutions:</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string name="no_notifications">There is not notifications.</string>
@@ -30,4 +29,15 @@
     <string name="players">Players</string>
 
     <string name="day">DAY</string>
+
+
+    <string name="save">SAVE</string>
+
+
+    <string name="birthday">Birthday: </string>
+    <string name="search_player">Search a player…</string>
+    <string name="position">Position: </string>
+    <string name="nationality">Nationality: </string>
+    <string name="market_value">Market Value: </string>
+    <string name="contract_until">Contract Until: </string>
 </resources>

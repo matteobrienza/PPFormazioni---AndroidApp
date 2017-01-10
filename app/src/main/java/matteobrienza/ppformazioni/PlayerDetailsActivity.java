@@ -116,11 +116,11 @@ public class PlayerDetailsActivity extends AppCompatActivity {
 
                             Player_Name.setText(player.getString("name").substring(player.getString("name").lastIndexOf("\n") + 1));
                             Player_Number.setText("#" + player.getString("number"));
-                            Player_Birthday.setText("Birthday: " + player.getString("dateOfBirth"));
-                            Player_Position.setText("Position: " + player.getString("position"));
-                            Player_Nationality.setText("Nationality: " + player.getString("nationality"));
-                            Player_MarketValue.setText("Market Value: " + player.getString("marketValue"));
-                            Player_ContractUntil.setText("Contract Until: " + player.getString("contractUntil"));
+                            Player_Birthday.setText(getResources().getString(R.string.birthday) + player.getString("dateOfBirth"));
+                            Player_Position.setText(getResources().getString(R.string.position) + player.getString("position"));
+                            Player_Nationality.setText(getResources().getString(R.string.nationality) + player.getString("nationality"));
+                            Player_MarketValue.setText(getResources().getString(R.string.market_value) + player.getString("marketValue"));
+                            Player_ContractUntil.setText(getResources().getString(R.string.contract_until) + player.getString("contractUntil"));
 
                         } catch (JSONException e) {
                             e.printStackTrace();

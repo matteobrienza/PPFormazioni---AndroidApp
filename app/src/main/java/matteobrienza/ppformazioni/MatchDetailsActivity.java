@@ -317,15 +317,15 @@ public class MatchDetailsActivity extends AppCompatActivity implements INewspape
                             }
 
                             if(substitutionsHome.length()>0){
-                                MatchOtherInfo msubs_home = new MatchOtherInfo("Substitutions", substitutionsHome.substring(0,substitutionsHome.lastIndexOf(",")));
-                                MatchOtherInfo coach_home = new MatchOtherInfo("Coach", team_home.getJSONObject("coach").getString("surname"));
+                                MatchOtherInfo msubs_home = new MatchOtherInfo(getResources().getString(R.string.home_match_subs), substitutionsHome.substring(0,substitutionsHome.lastIndexOf(",")));
+                                MatchOtherInfo coach_home = new MatchOtherInfo(getResources().getString(R.string.home_match_coach), team_home.getJSONObject("coach").getString("surname"));
                                 HomeInfos.add(coach_home);
                                 HomeInfos.add(msubs_home);
                             }
 
                             if(substitutionsAway.length()>0){
-                                MatchOtherInfo msubs_away = new MatchOtherInfo("Substitutions", substitutionsAway.substring(0,substitutionsAway.lastIndexOf(",")));
-                                MatchOtherInfo coach_away = new MatchOtherInfo("Coach", team_away.getJSONObject("coach").getString("surname"));
+                                MatchOtherInfo msubs_away = new MatchOtherInfo(getResources().getString(R.string.home_match_subs), substitutionsAway.substring(0,substitutionsAway.lastIndexOf(",")));
+                                MatchOtherInfo coach_away = new MatchOtherInfo(getResources().getString(R.string.home_match_coach), team_away.getJSONObject("coach").getString("surname"));
                                 AwayInfos.add(coach_away);
                                 AwayInfos.add(msubs_away);
                             }
