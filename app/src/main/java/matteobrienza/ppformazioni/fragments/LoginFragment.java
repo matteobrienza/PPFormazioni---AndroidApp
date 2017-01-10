@@ -144,7 +144,7 @@ public class LoginFragment extends Fragment {
                                 fragmentTransaction.addToBackStack(null);
                                 fragmentTransaction.commit();
 
-                                Toast.makeText(getActivity(), "Authentication successful for " + phoneNumber, Toast.LENGTH_LONG).show();
+                                //Toast.makeText(getActivity(), "Authentication successful for " + phoneNumber, Toast.LENGTH_LONG).show();
                                 //NOTIFY MAIN ACTIVITY VIA INTERFACE
                                 mCallback.onLoginSuccess(digitsClient.getString("username"),digitsClient.getString("phoneNumber") );
                                 dialog.dismiss();
@@ -153,7 +153,7 @@ public class LoginFragment extends Fragment {
                             } catch (UnsupportedEncodingException | JSONException e) {
                                 e.printStackTrace();
                                 dialog.dismiss();
-                                Toast.makeText(getActivity(), "Authentication Failed", Toast.LENGTH_LONG).show();
+                                //Toast.makeText(getActivity(), "Authentication Failed", Toast.LENGTH_LONG).show();
                                 System.exit(0);
                             }
 
@@ -165,7 +165,7 @@ public class LoginFragment extends Fragment {
                             //editor_account_information.clear().commit();
                             dialog.dismiss();
                             System.out.println(error.toString());
-                            Toast.makeText(getActivity(), "Authentication Failed", Toast.LENGTH_LONG).show();
+                            //Toast.makeText(getActivity(), "Authentication Failed", Toast.LENGTH_LONG).show();
                             System.exit(0);
                         }
                     });
